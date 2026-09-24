@@ -13,6 +13,8 @@ function formatAppointment(appointment) {
     preferredTime: appointment.preferredTime,
     notes: appointment.notes,
     status: appointment.status,
+    amountInPaise: appointment.amountInPaise || 0,
+    paymentStatus: appointment.paymentStatus || "unpaid",
     createdAt: appointment.createdAt,
     updatedAt: appointment.updatedAt,
   };
@@ -42,7 +44,7 @@ export async function getAppointments(req, res, next) {
     const filter = req.user.role === "admin" ? {} : { user: req.user._id };
 
     const appointments = await Appointment.find(filter)
-      .sort({ preferredDate: 1, createdAt: -1 })
+      .sort({ createdAt: -1, preferredDate: -1 })
       .populate("user", "name email");
 
     res.json({
